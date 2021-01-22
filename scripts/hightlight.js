@@ -7,29 +7,72 @@ let currentLine = 0;
 
 const highlight = (str) => {
     let lines = str.split("\n");
-    let classes = /(sprite|input)/g;
     let numbers = /(-)?\d+/g;
     let symbols = /(\(|\)|;|{|})/g;
-    let strings = /"(.*)"/g;
+    let strings = /".*"/g;
     codeArea.innerHTML = "";
 
-    let lineOrder = 0;
-    lines.forEach(line => {
-        line = line.replace(strings, "<span class=\"string\">$&</span>");
-        line = line.replace(symbols, "<span class=\"token\">$&</span>");
-        line = line.replace(numbers, "<span class=\"number\">$&</span>");
-        line = line.replace(classes, "<span class=\"class\">$&</span>");
+    let highlightClasses = {
+        "motion": "motion",
+        "looks": "looks",
+        "sounds": "sounds",
+        "events": "events",
+        "control": "control",
+        "sensing": "sensing",
+        "operators": "operators",
+        "logic": "logic",
+        "string": "string",
+        "number": "number",
+        "bool": "bool",
+        "variables": "variables",
+        "lists": "lists",
+        "class": "class",
 
-        commandsList.forEach(com => {
-            let filter = line.includes(com.command);
+        lbracket:  'token',
+        rbracket:  'token',
+        lcurly:  'token',
+        rcurly:  'token',
+        comSeperator:  'token',
+        argSeperator:  'token',
+        hatSeperator:  'token',
+        classSeperator:  'token',
+    }
+
+    let highlightExceptions = {
+        '(': '\\(',
+        ')': '\\)',
+        '.': '\\.',
+        '+': '\\+',
+        '*': '\\*',
+        '/': '\/',
+        '||': '\\|\\|',
+    }
+
+    let tokensList = tokenizeStr(inputArea.value);
+    if(tokensList == "invalid syntax") return;
+
+    lines.forEach(line => {
+        tokensList.forEach(com => {
+            if(Object.keys(highlightClasses).includes(com.type)){
+                let filter = line.includes(com.value);
+                if(filter){
+                    let r;
+                    if(Object.keys(highlightExceptions).includes(com.value)) r = new RegExp(highlightExceptions[com.value], 'g');
+                    else r = new RegExp(com.value, 'g');
+                    line = line.replace(r, `<span class=\"${highlightClasses[com.type]}\">$&</span>`);
+                }
+            }
+        });
+        classesList.forEach(cl => {
+            let filter = line.includes(cl.class);
             if(filter){
-                let r = new RegExp(com.command, 'g');
-                line = line.replace(r, `<span class=\"${com.category}\">$&</span>`);
+                let r = new RegExp(cl.class, 'g');
+                line = line.replace(r, `<span class=\"class\">$&</span>`);
             }
         });
 
-        codeArea.innerHTML += `<div class="line" style="order: ${lineOrder}">${line}</div>`;
-        lineOrder+=2;
-    })
+        codeArea.innerHTML += `<div class="line">${line}</div>`;
+    });
 }
+
 

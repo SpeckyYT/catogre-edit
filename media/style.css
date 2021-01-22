@@ -288,12 +288,10 @@ input:focus{
     background: rgba(255, 255, 255, 0.1);
 }
 
-.temp-line{
-    height: 20px;
-    width: 100%;
-    padding: 0 30px;
-    background: rgba(255, 255, 255, 1);
-    flex-shrink: 0;
+.temp-line, .temp-span {
+    background: rgba(255, 255, 255, 0.25);
+    opacity: 0.8;
+    filter: brightness(2);
 }
 
 .code-lines{
@@ -329,6 +327,7 @@ input:focus{
     display: none;
     border: 1px solid #000;
     box-shadow: 0 2px 5px rgba(0,0,0,.5);
+    max-height: 400px;
 }
 .code-autocomplete.active{
     display: block;
@@ -357,7 +356,8 @@ input:focus{
     margin: 0;
     margin-right: 10px;
     font-size: 12px;
-    width: 40%;
+    min-width: 40%;
+    width: fit-content;
     font-family: 'Roboto Mono', monospace;
     font-weight: 400;
 }
@@ -365,7 +365,6 @@ input:focus{
     margin: 0;
     font-size: 10px;
     color: #aaa;
-    width: 60%;
     max-height: 100%;
     overflow: auto;
     display: none;
@@ -460,17 +459,21 @@ input:focus{
     box-shadow: 0 2px 5px rgba(0,0,0,.25);
     user-select: none;
     cursor: grab;
-    width: fit-content;
+    width: min-content;
     white-space: pre;
 }
 .palette-item:active{
     cursor: grabbing;
 }
 
+.palette-item.newgroup{
+    margin-top: 20px;
+}
+
 
 #paletteCategories{
-    width: 60px;
-    overflow: hidden;
+    min-width: 60px;
+    overflow: auto;
     display: flex;
     flex-direction: column;
     flex-shrink: 0;
@@ -512,6 +515,25 @@ input:focus{
     margin-top: 0;
 }
 
+#beautifyBtn{
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    cursor: pointer;
+    padding: 10px;
+    transition: 0.25s ease transform;
+}
+#beautifyBtn:hover{
+    transform: scale(1.2);
+    opacity: 0.7;
+}
+
+#beautifyBtn .iconify{
+    color: #fff;
+    height: 25px;
+    width: 25px;
+}
+
 /* 
 syntax 
 ------
@@ -542,6 +564,25 @@ block types
     color: #4cbfe6;
 }
 
+.operators{
+    color: #40bf4a;
+}
+
+.variables{
+    color: #ff8c1a;
+}
+.lists{
+    color: #ff661a;
+}
+
+.logic{
+    color: #b3d83a;
+}
+
+.types{
+    color: #f7b26c;
+}
+
 /* 
 syntax
 ------
@@ -560,17 +601,13 @@ misc
     color: #7ccbff;
 }
 
-.string .number {
-    color: #7ccbff;
+.bool{
+    color: #e970df;
 }
-
 .class {
     color: #1bc47d;
 }
 
-.string .class {
-    color: #7ccbff;
-}
 
 
 /* animations */
